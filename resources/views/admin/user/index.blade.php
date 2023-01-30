@@ -5,12 +5,12 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1>Projects</h1>
+        <h1>Users</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">Projects</li>
+          <li class="breadcrumb-item"><a href="{{ Route('admin.home') }}">Home</a></li>
+          <li class="breadcrumb-item active">Users</li>
         </ol>
       </div>
     </div>
@@ -23,7 +23,7 @@
   <!-- Default box -->
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Projects</h3>
+      <h3 class="card-title">Users</h3>
 
       <div class="card-tools">
         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -38,66 +38,27 @@
       <table class="table table-striped projects">
           <thead>
               <tr>
-                  <th style="width: 1%">
-                      #
-                  </th>
-                  <th style="width: 20%">
-                      Project Name
-                  </th>
-                  <th style="width: 30%">
-                      Team Members
-                  </th>
-                  <th>
-                      Project Progress
-                  </th>
-                  <th style="width: 8%" class="text-center">
-                      Status
-                  </th>
-                  <th style="width: 20%">
-                  </th>
+                  <th style="width: 10%">Id</th>
+                  <th style="width: 20%">Username</th>
+                  <th style="width: 20%">Full name</th>
+                  <th style="width: 10%">Phone</th>
+                  <th style="width: 10%" class="text-center">Role</th>
+                  <th></th>
               </tr>
           </thead>
           <tbody>
+            @foreach($users as $item)
               <tr>
-                  <td>
-                      #
-                  </td>
-                  <td>
-                      <a>
-                          AdminLTE v3
-                      </a>
-                      <br/>
-                      <small>
-                          Created 01.01.2019
-                      </small>
-                  </td>
-                  <td>
-                      <ul class="list-inline">
-                          <li class="list-inline-item">
-                              <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
-                          </li>
-                          <li class="list-inline-item">
-                              <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar2.png">
-                          </li>
-                          <li class="list-inline-item">
-                              <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar3.png">
-                          </li>
-                          <li class="list-inline-item">
-                              <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar4.png">
-                          </li>
-                      </ul>
-                  </td>
-                  <td class="project_progress">
-                      <div class="progress progress-sm">
-                          <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: 57%">
-                          </div>
-                      </div>
-                      <small>
-                          57% Complete
-                      </small>
-                  </td>
+                  <td>{{ $item->id }}</td>
+                  <td>{{ $item->email }}</td>
+                  <td>{{ $item->name }}</td>
+                  <td>{{ $item->phone }}</td>
                   <td class="project-state">
-                      <span class="badge badge-success">Success</span>
+                    @if ($item->role != null && $item->role == 1)
+                        <span class="badge badge-danger">Admin</span>
+                    @else 
+                      <span class="badge badge-success">User</span>
+                    @endif
                   </td>
                   <td class="project-actions text-right">
                       <a class="btn btn-primary btn-sm" href="#">
@@ -117,6 +78,7 @@
                       </a>
                   </td>
               </tr>
+            @endforeach
           </tbody>
       </table>
     </div>

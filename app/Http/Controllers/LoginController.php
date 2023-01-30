@@ -16,10 +16,15 @@ class LoginController extends Controller
         $email = $request->email;
         $pwd = $request->password;
         $user = User::where('email', '=', $email)->where('password', $pwd)->first();
-        if ($user->role == 1) {
-            // chuyen ve trang admin
-        } else {
-            return redirect('/');
+        if ($user != null) {
+            // save user to session
+            $request->session()->put('user', $user);
+            if ($user->role == 1) {
+                return redirect()->route('admin.home');
+            } else {
+                return redirect('/');
+            }
         }
+        return redirect()->route('login');
     }
 }
