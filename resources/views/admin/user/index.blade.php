@@ -66,16 +66,20 @@
                           </i>
                           View
                       </a>
-                      <a class="btn btn-info btn-sm" href="#">
+                      <a class="btn btn-info btn-sm" href="{{ Route('admin.user.edit', $item->id) }}">
                           <i class="fas fa-pencil-alt">
                           </i>
                           Edit
                       </a>
-                      <a class="btn btn-danger btn-sm" href="#">
-                          <i class="fas fa-trash">
-                          </i>
-                          Delete
-                      </a>
+                      <form action="{{ Route('admin.user.destroy', $item->id) }}" method="post" style="display:inline-block">
+                        @csrf
+                        @method("delete")
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash">
+                            </i>
+                            Delete
+                        </button>
+                      </form>
                   </td>
               </tr>
             @endforeach

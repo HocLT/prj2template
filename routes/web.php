@@ -24,6 +24,18 @@ Route::get('/login', [LoginController::class, 'index'])->name('login');
 
 Route::post('/login', [LoginController::class, 'login'])->name('checkLogin');
 
-Route::get('/admin', [HomeController::class, 'index'])->name('admin.home');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::resource('/admin/user', UserController::class);
+Route::group(['middleware'=>'canLogin'], function() {
+    // cần login mới truy cập
+    
+    
+    Route::group(['middleware'=>'canAdmin', 'prefix'=> 'admin', 'as' => 'admin.'], function() {
+        // cần admin mới truy cập
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+
+        Route::resource('/user', UserController::class);
+    });
+        
+});
+

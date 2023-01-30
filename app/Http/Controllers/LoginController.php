@@ -27,4 +27,11 @@ class LoginController extends Controller
         }
         return redirect()->route('login');
     }
+
+    public function logout(Request $request) 
+    {
+        // xóa session
+        $request->session()->flush();
+        return redirect()->route('login');
+    }
 }

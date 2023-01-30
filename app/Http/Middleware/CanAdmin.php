@@ -17,6 +17,7 @@ class CanAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = $request->session()->get('user');
+        
         if ($user->role == 1) {
             return $next($request);
         }
