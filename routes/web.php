@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,8 @@ Route::group(['middleware'=>'canLogin'], function() {
         Route::get('/', [HomeController::class, 'index'])->name('home');
 
         Route::resource('/user', UserController::class);
+
+        Route::resource('/product', ProductController::class);
     });
         
 });
