@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\FE\HomeController as FEController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,15 +18,16 @@ use App\Http\Controllers\Admin\ProductController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FEController::class, 'index'])->name('home');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 
 Route::post('/login', [LoginController::class, 'login'])->name('checkLogin');
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// for product details
+Route::get('/product/{slug}', [FEController::class, 'product'])->name('product.details');
 
 Route::group(['middleware'=>'canLogin'], function() {
     // cần login mới truy cập
