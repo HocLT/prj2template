@@ -29,6 +29,12 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 // for product details
 Route::get('/product/{slug}', [FEController::class, 'product'])->name('product.details');
 
+Route::post('/add-cart', [FEController::class, 'addCart'])->name('addCart');
+
+Route::get('/view-cart', [FEController::class, 'viewCart'])->name('viewCart');
+Route::get('/clear-cart', [FEController::class, 'clearCart'])->name('clearCart');
+
+
 Route::group(['middleware'=>'canLogin'], function() {
     // cần login mới truy cập
     

@@ -437,6 +437,27 @@
 
 @section("myjs")
 <script>
-  
+  const pid = "{{ $prod->id }}"
+  const url = "{{ Route('addCart') }}"
+
+  $(document).ready(function() {
+    $('.add-to-cart').click(function(e) {
+      e.preventDefault(); // bỏ tác dụng của link
+      //let pid = $(this).data("id"); // lấy id từ data-id
+      let quantity = $('input[name="product-quatity"]').val();
+      // dùng jquery ajax gửi request về server
+      $.ajax({
+          type: 'post',
+          url: url,     // url?pid=3&quantity=1&_token=23423
+          data: {
+              pid: pid, 
+              quantity: quantity, 
+              _token: '{{ csrf_token() }}',
+          }, success: function(data) {
+              alert('add product to cart successful.');
+          }
+      });
+    });
+    });
 </script>
 @endsection

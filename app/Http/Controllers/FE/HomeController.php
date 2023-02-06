@@ -28,7 +28,7 @@ class HomeController extends Controller
 
     public function addCart(Request $request) 
     {
-        $pid = $request->id;
+        $pid = $request->pid;
         $quantity = $request->quantity;
 
         $prod = Product::find($pid);
@@ -42,5 +42,22 @@ class HomeController extends Controller
 
         $cart[] = $cartItem;    // xử lý cộng dồn quantity nếu item trùng
         $request->session()->put('cart', $cart);
+    }
+
+    public function viewCart(Request $request) 
+    {
+        return view('fe.viewCart');
+        // if ($request->session()->has('cart')) {
+        //     $cart = $request->session()->get('cart');
+        //     //dd($cart);
+        //     echo "Product Name: " . $cart[0]->product->name;
+        // } else{
+        //     echo 'No Product';
+        // }
+    }
+
+    public function clearCart(Request $request) 
+    {
+        $request->session()->forget('cart');
     }
 }
