@@ -34,6 +34,8 @@ Route::post('/add-cart', [FEController::class, 'addCart'])->name('addCart');
 Route::get('/view-cart', [FEController::class, 'viewCart'])->name('viewCart');
 Route::get('/clear-cart', [FEController::class, 'clearCart'])->name('clearCart');
 
+Route::post('/change-cart-item', [FEController::class, 'changeCartItem'])->name('changeCart');
+Route::post('/remove-cart-item', [FEController::class, 'removeCartItem'])->name('removeCart');
 
 Route::group(['middleware'=>'canLogin'], function() {
     // cần login mới truy cập

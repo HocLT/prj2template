@@ -27,7 +27,7 @@
               <div class="price-field produtc-price"><p class="price">{{ $item->product->price }} đ</p></div>
               <div class="quantity">
                 <div class="quantity-input">
-                  <input type="text" name="product-quatity" value="{{ $item->quantity }}" data-max="120" pattern="[0-9]*" >									
+                  <input type="text" name="product-quantity" value="{{ $item->quantity }}" data-max="120" pattern="[0-9]*" data-id="{{ $item->product->id }}">									
                   <a class="btn btn-increase" href="#"></a>
                   <a class="btn btn-reduce" href="#"></a>
                 </div>
@@ -37,7 +37,7 @@
               $total += $item->quantity * $item->product->price;
               @endphp
               <div class="delete">
-                <a href="#" class="btn btn-delete" title="">
+                <a href="#" class="btn btn-delete" title="" data-id="{{ $item->product->id }}">
                   <span>Delete from your cart</span>
                   <i class="fa fa-times-circle" aria-hidden="true"></i>
                 </a>
@@ -222,4 +222,52 @@
 
   </div><!--end main content area-->
 </div><!--end container-->
+@endsection
+
+@section("myjs")
+<script>
+  $(".quantity-input").on('click', '.btn', function(event) {
+    event.preventDefault();
+    var _this = $(this),
+      _input = _this.siblings('input[name=product-quantity]'),
+      _current_value = _this.siblings('input[name=product-quantity]').val(),
+      _max_value = _this.siblings('input[name=product-quantity]').attr('data-max');
+    if(_this.hasClass('btn-reduce')){
+      if (parseInt(_current_value, 10) > 1) _input.val(parseInt(_current_value, 10) - 1);
+    }else {
+      if (parseInt(_current_value, 10) < parseInt(_max_value, 10)) _input.val(parseInt(_current_value, 10) + 1);
+    }
+    let pid = _input.data("id");
+    let quantity = _this.siblings('input[name=product-quantity]').val();
+    
+    $.ajax({
+        type: 'post',
+        url: "{{ Route('changeCart') }}",     // url?pid=3&quantity=1&_token=23423
+        data: {
+            pid: pid, 
+            quantity: quantity, 
+            _token: '{{ csrf_token() }}',
+        }, success: function(data) {
+            alert('update cart success.')
+            location.reload();
+        }
+    });
+  });
+
+  $('.btn-delete').click(function(e) {
+    e.preventDefault();
+    let pid = $(this).data("id");
+    $.ajax({
+        type: 'post',
+        url: "{{ Route('removeCart') }}",     // url?pid=3&quantity=1&_token=23423
+        data: {
+            pid: pid, 
+            _token: '{{ csrf_token() }}',
+        }, success: function(data) {
+            alert('update cart success.')
+            location.reload();
+        }
+    });
+  });
+</script>
 @endsection

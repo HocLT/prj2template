@@ -40,7 +40,20 @@ class HomeController extends Controller
             $cart = [];
         }
 
-        $cart[] = $cartItem;    // xử lý cộng dồn quantity nếu item trùng
+        // xử lý cộng dồn nếu trùng product id
+        for ($i = 0; $i < count($cart); $i++) {
+            if ($cart[$i]->product->id == $pid) {
+                break;
+            }
+        }
+
+        if ($i < count($cart)) {
+            // trường hợp product đã có trong cart => cộng dồn quantity
+            $cart[$i]->quantity += $quantity;
+        } else {
+            $cart[] = $cartItem;
+        }
+
         $request->session()->put('cart', $cart);
     }
 
@@ -59,5 +72,48 @@ class HomeController extends Controller
     public function clearCart(Request $request) 
     {
         $request->session()->forget('cart');
+    }
+
+    public function changeCartItem(Request $request)
+    {
+        if ($request->session()->has('cart')) {
+            $cart = $request->session()->get('cart');
+            
+            $pid = $request->pid;
+            $quantity = $request->quantity;
+
+            for ($i = 0; $i < count($cart); $i++) {
+                if ($cart[$i]->product->id == $pid) {
+                    break;
+                }
+            }
+
+            if ($i < count($cart)) {
+                $cart[$i]->quantity = $quantity;
+            }
+
+            $request->session()->put('cart', $cart);
+        }
+    }
+
+    public function removeCartItem(Request $request)
+    {
+        if ($request->session()->has('cart')) {
+            $cart = $request->session()->get('cart');
+            
+            $pid = $request->pid;
+
+            for ($i = 0; $i < count($cart); $i++) {
+                if ($cart[$i]->product->id == $pid) {
+                    break;
+                }
+            }
+
+            if ($i < count($cart)) {
+                unset($cart[$i]); 
+            }
+
+            $request->session()->put('cart', $cart);
+        }
     }
 }
