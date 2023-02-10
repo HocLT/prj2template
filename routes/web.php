@@ -37,10 +37,17 @@ Route::get('/clear-cart', [FEController::class, 'clearCart'])->name('clearCart')
 Route::post('/change-cart-item', [FEController::class, 'changeCartItem'])->name('changeCart');
 Route::post('/remove-cart-item', [FEController::class, 'removeCartItem'])->name('removeCart');
 
+
+
+
 Route::group(['middleware'=>'canLogin'], function() {
     // cần login mới truy cập
+    Route::get('/checkout', [FEController::class, 'checkout'])->name('checkout');
     
+    Route::post('/process-checkout', [FEController::class, 'processCheckout'])->name('processCheckout');
     
+
+
     Route::group(['middleware'=>'canAdmin', 'prefix'=> 'admin', 'as' => 'admin.'], function() {
         // cần admin mới truy cập
         Route::get('/', [HomeController::class, 'index'])->name('home');

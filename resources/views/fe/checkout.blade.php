@@ -4,72 +4,72 @@
 
   <div class="wrap-breadcrumb">
     <ul>
-      <li class="item-link"><a href="{{ Route('home') }}" class="link">Home</a></li>
-      <li class="item-link"><span>View Cart</span></li>
+      <li class="item-link"><a href="{{ Route('home') }}" class="link">home</a></li>
+      <li class="item-link"><span>login</span></li>
     </ul>
   </div>
-  <div class="main-content-area">
-    @php
-    $total = 0;
-    @endphp
-    <div class="wrap-iten-in-cart">
-      <h3 class="box-title">View Cart</h3>
-      <ul class="products-cart">
-        @if (Session::has('cart'))
-          @foreach(Session::get('cart') as $item)
-            <li class="pr-cart-item">
-              <div class="product-image">
-                <figure><img src="{{ asset('/images/' .$item->product->image) }}" alt="{{ $item->product->name }}"></figure>
-              </div>
-              <div class="product-name">
-                <a class="link-to-product" href="{{ Route('product.details', $item->product->slug) }}">{{ $item->product->name }}</a>
-              </div>
-              <div class="price-field produtc-price"><p class="price">{{ $item->product->price }} đ</p></div>
-              <div class="quantity">
-                <div class="quantity-input">
-                  <input type="text" name="product-quantity" value="{{ $item->quantity }}" data-max="120" pattern="[0-9]*" data-id="{{ $item->product->id }}">									
-                  <a class="btn btn-increase" href="#"></a>
-                  <a class="btn btn-reduce" href="#"></a>
-                </div>
-              </div>
-              <div class="price-field sub-total"><p class="price">{{ $item->quantity * $item->product->price }} đ</p></div>
-              @php
-              $total += $item->quantity * $item->product->price;
-              @endphp
-              <div class="delete">
-                <a href="#" class="btn btn-delete" title="" data-id="{{ $item->product->id }}">
-                  <span>Delete from your cart</span>
-                  <i class="fa fa-times-circle" aria-hidden="true"></i>
-                </a>
-              </div>
-            </li>
-          @endforeach
-        @else
-          <li class="pr-cart-item" colspan="5">No Product</li>
-        @endif
-      </ul>
+  <div class=" main-content-area">
+    <form action="{{ Route('processCheckout') }}" method="post" name="frm-billing">
+      @csrf
+    <div class="wrap-address-billing">
+      <h3 class="box-title">Billing Address</h3>
+      
+        <p class="row-in-form">
+          <label for="name">Name<span>*</span></label>
+          <input id="name" type="text" name="shipping_name" value="{{ Session::get('user')->name }}" placeholder="Your name">
+        </p>
+        <p class="row-in-form">
+          <label for="email">Email Addreess:</label>
+          <input id="email" type="email" name="shipping_email" value="{{ Session::get('user')->email }}" placeholder="Type your email">
+        </p>
+        <p class="row-in-form">
+          <label for="phone">Phone number<span>*</span></label>
+          <input id="phone" type="number" name="shipping_phone" value="{{ Session::get('user')->phone }}" placeholder="10 digits format">
+        </p>
+        <p class="row-in-form">
+          <label for="add">Address:</label>
+          <input id="add" type="text" name="shipping_address" value="" placeholder="Street at apartment number">
+        </p>
     </div>
-
-    <div class="summary">
-      <div class="order-summary">
-        <h4 class="title-box">Order Summary</h4>
-        <p class="summary-info"><span class="title">Subtotal</span><b class="index">{{ $total }} đ</b></p>
-        <p class="summary-info"><span class="title">Shipping</span><b class="index">Free Shipping</b></p>
-        <p class="summary-info total-info "><span class="title">Total</span><b class="index">{{ $total }} đ</b></p>
+    <div class="summary summary-checkout">
+      <div class="summary-item payment-method">
+        <h4 class="title-box">Payment Method</h4>
+        <p class="summary-info"><span class="title">Check / Money order</span></p>
+        <p class="summary-info"><span class="title">Credit Cart (saved)</span></p>
+        <div class="choose-payment-methods">
+          <label class="payment-method">
+            <input name="payment-method" id="payment-method-bank" value="bank" type="radio">
+            <span>COD</span>
+            <span class="payment-desc">But the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</span>
+          </label>
+          <label class="payment-method">
+            <input name="payment-method" id="payment-method-visa" value="visa" type="radio">
+            <span>visa</span>
+            <span class="payment-desc">There are many variations of passages of Lorem Ipsum available</span>
+          </label>
+          <label class="payment-method">
+            <input name="payment-method" id="payment-method-paypal" value="paypal" type="radio">
+            <span>Paypal</span>
+            <span class="payment-desc">You can pay with your credit</span>
+            <span class="payment-desc">card if you don't have a paypal account</span>
+          </label>
+        </div>
+        <p class="summary-info grand-total"><span>Grand Total</span> <span class="grand-total-price">{{ $total }} đ</span></p>
+        <button type="submit" class="btn btn-medium">Place order now</button>
       </div>
-      <div class="checkout-info">
-        <label class="checkbox-field">
-          <input class="frm-input " name="have-code" id="have-code" value="" type="checkbox"><span>I have promo code</span>
-        </label>
-        <a class="btn btn-checkout" href="{{ Route('checkout') }}">Check out</a>
-        <a class="link-to-shop" href="{{ Route('home') }}">Continue Shopping<i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>
-      </div>
-      <div class="update-clear">
-        <a class="btn btn-clear" href="#">Clear Shopping Cart</a>
-        <a class="btn btn-update" href="#">Update Shopping Cart</a>
+      <div class="summary-item shipping-method">
+        <h4 class="title-box f-title">Shipping method</h4>
+        <p class="summary-info"><span class="title">Flat Rate</span></p>
+        <p class="summary-info"><span class="title">Fixed $50.00</span></p>
+        <h4 class="title-box">Discount Codes</h4>
+        <p class="row-in-form">
+          <label for="coupon-code">Enter Your Coupon code:</label>
+          <input id="coupon-code" type="text" name="coupon-code" value="" placeholder="">	
+        </p>
+        <a href="#" class="btn btn-small">Apply</a>
       </div>
     </div>
-
+    </form>
     <div class="wrap-show-advance-info-box style-1 box-in-site">
       <h3 class="title-box">Most Viewed Products</h3>
       <div class="wrap-products">

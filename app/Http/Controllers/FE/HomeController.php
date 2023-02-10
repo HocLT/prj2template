@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\CartItem;
+use App\Models\Order;
+use App\Models\OrderDetail;
 
 class HomeController extends Controller
 {
@@ -115,5 +117,42 @@ class HomeController extends Controller
 
             $request->session()->put('cart', $cart);
         }
+    }
+
+    public function checkout(Request $request) 
+    {
+        $total = 0;
+        if ($request->session()->has('cart')) {
+            $cart = $request->session()->get('cart');
+            foreach ($cart as $item) {
+                $total += $item->product->price * $item->quantity;
+            }
+        }
+
+        return view('fe.checkout', compact('total'));
+    }
+
+    public function processCheckout(Request $request) 
+    {
+        if ($request->session()->has('cart')) {
+            $cart = $request->all();
+            $cart['order_date'] = date('Y-m-d', time());
+            $cart['user_id'] = $request->session()->get('user')->id;
+            $ord = Order::create($cart);
+            //dd($ord);
+            // lưu order detail
+            $cart = $request->session()->get('cart');
+            foreach ($cart as $item) {
+                $od = new OrderDetail();
+                $od->order_id = $ord->id;
+                $od->product_id = $item->product->id;
+                $od->price = $item->product->price;
+                $od->quantity = $item->quantity;
+                $od->save();
+            }
+
+            $request->session()->forget('cart');
+        }
+        return view('fe.thankyou');
     }
 }
